@@ -29,6 +29,7 @@ export class HomePage {
     this.contactSub = this.contactService.getContacts()
       .subscribe(res => {
         this.contacts = res;
+        console.log(this.contacts);
       },
         () => {
 
@@ -36,4 +37,8 @@ export class HomePage {
           this.contactSub.unsubscribe();
         })
   }
+  removeContact(c){
+    this.contactService.deleteContact(c);
+  }
+
 }
