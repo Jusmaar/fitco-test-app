@@ -1,14 +1,39 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { ContactService } from '../../services/contact.service';
+import { IContact } from '../../models/contact.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-
-  constructor(public navCtrl: NavController) {
-
+  contacts: Array<IContact>;
+  contactSub: Subscription;
+  constructor(
+    public navCtrl: NavController,
+    private contactService: ContactService
+  ) {
   }
 
+  ionViewDidLoad(): void {
+    this.getContacts();
+  }
+
+  ionViewDidLeave(): void {
+    if (!!this.contactSub) { this.contactSub.unsubscribe(); }
+  }
+
+  getContacts(): void {
+    this.contactSub = this.contactService.getContacts()
+      .subscribe(res => {
+        this.contacts = res;
+      },
+        () => {
+
+        }, () => {
+          this.contactSub.unsubscribe();
+        })
+  }
 }
